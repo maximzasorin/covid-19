@@ -1,1 +1,5 @@
 .DS_Store
+/node_modules
+/app
+/yarn-error.log
+/report.html

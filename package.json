@@ -1,0 +1,40 @@
+{
+  "dependencies": {
+    "axios": "^0.19.2",
+    "chroma-js": "^2.1.0",
+    "date-fns": "^2.11.1",
+    "leaflet": "^1.6.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/chroma-js": "^2.0.0",
+    "@types/date-fns": "^2.6.0",
+    "@types/geojson": "^7946.0.7",
+    "@types/leaflet": "^1.5.12",
+    "@types/react": "^16.9.31",
+    "@types/react-dom": "^16.9.6",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^3.4.2",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.0.4",
+    "style-loader": "^1.1.3",
+    "terser-webpack-plugin": "^2.3.5",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-bundle-analyzer": "^3.6.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/webpack-dev-server --config webpack.dev.js",
+    "build": "./node_modules/.bin/webpack --config webpack.prod.js"
+  }
+}
