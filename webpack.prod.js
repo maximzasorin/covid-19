@@ -4,11 +4,10 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-module.exports = (env) => merge(common, {
+module.exports = (env) => merge(common(env), {
     mode: 'production',
     output: {
         filename: '[name].[contenthash].js',
-        publicPath: env && env.baseUrl || '/'
     },
     performance: {
         hints: false,

@@ -41,7 +41,11 @@ function Spinner() {
     </div>;
 }
 
-function App() {
+interface AppProps {
+    dataBaseUrl: string
+}
+
+function App(props: AppProps) {
     const [ state, setState ] = useState({
         isLoading: true,
         isError: false
@@ -50,13 +54,17 @@ function App() {
     const [ map, setMap ] = useState(null);
     const [ report, setReport ] = useState(null);
 
+    const axiosInstance = axios.create({
+        baseURL: props.dataBaseUrl
+    });
+
     useEffect(() => {
         loadFonts()
             .then(() => {
                 return Promise.all([
-                    axios.get('/data/russia.geojson'),
-                    axios.get('/data/russia-regions.json'),
-                    axios.get('/data/report.json')
+                    axiosInstance.get('/data/russia.geojson'),
+                    axiosInstance.get('/data/russia-regions.json'),
+                    axiosInstance.get('/data/report.json')
                 ]);
             })
             .then((responses) => {
@@ -77,7 +85,6 @@ function App() {
                 });
             })
             .catch((err) => {
-                console.log(err);
                 setState({
                     isLoading: false,
                     isError: true
@@ -105,7 +112,8 @@ function App() {
     </React.Fragment>;
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('app')
-);
+const appElement = document.getElementById('app');
+
+ReactDOM.render(<App
+    dataBaseUrl={appElement.dataset.dataBaseUrl}
+/>, appElement);
