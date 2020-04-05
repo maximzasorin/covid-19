@@ -76,7 +76,7 @@ export default function (props: RussiaMapProps) {
                         var layer = e.target;
 
                         layer.setStyle({
-                            weight: 3,
+                            weight: 2,
                             color: '#666',
                             dashArray: '',
                             fillOpacity: 0.7
@@ -102,7 +102,7 @@ export default function (props: RussiaMapProps) {
         <div
             className="Map__Container"
             ref={refMap}
-            style={{width: 1000, height: 650 }}
+            // style={{width: 1000, height: 650 }}
         />
     </div>;
 }

@@ -10,7 +10,7 @@ module.exports = (env) => merge(common(env), {
     },
     devServer: {
         host: '0.0.0.0',
-        port: 4001,
+        port: 4000,
         disableHostCheck: true,
         historyApiFallback: {
             index: '/'

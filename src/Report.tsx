@@ -3,9 +3,15 @@ import chroma from 'chroma-js';
 import { GeoJSON } from 'geojson';
 import formatDate from 'date-fns/format';
 import parseDate from 'date-fns/parse';
-import dateRuLocale from 'date-fns/locale/ru'
+import dateRuLocale from 'date-fns/locale/ru';
 
-import { RussiaRegionIso3166, RussiaRegions, Report, ReportVersion, ReportRegions } from './Interfaces';
+import {
+    RussiaRegions,
+    Report,
+    ReportVersion,
+    ReportRegions,
+    ReportRegionsArray
+} from './Interfaces';
 import RussiaMap from './RussiaMap';
 
 export interface ReportProps {
@@ -13,11 +19,6 @@ export interface ReportProps {
     regions: RussiaRegions,
     data: Report
 }
-
-type ReportRegionsArray = {
-    region: RussiaRegionIso3166,
-    count: number
-}[];
 
 interface AggregatedReport {
     total: number,
@@ -34,106 +35,181 @@ export default function(props: ReportProps) {
     const deathsAggregated = aggregateData(props.data.deaths);
 
     return <div className="Report">
-        <p>Данные на {buildDate(props.data.updatedOn)}</p>
+        <header className="Report__Header">
+            <h1>
+                COVID-19 в России
+            </h1>
+        </header>
+        <div className="Report__Block">
+            <p>Данные на {buildDate(props.data.updatedOn)}</p>
 
-        <h2>Подтвержденные случаи</h2>
+            <h2>Подтвержденные случаи</h2>
 
-        <p>
-            Всего случаев: {casesAggregated.total} {
-                casesAggregated.lastDate ? (
-                    casesAggregated.lastDate == props.data.updatedOn ? ' (+' + casesAggregated.totalLastDate + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
-                ) : ''
-            }
-        </p>
+            <p>
+                Всего случаев: {formatNumber(casesAggregated.total)} {
+                    casesAggregated.lastDate ? (
+                        casesAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(casesAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
+                    ) : ''
+                }
+            </p>
 
-        <h3>Карта</h3>
+            <h3>Карта</h3>
+        </div>
 
         <RussiaMap
             map={props.map}
             regions={props.regions}
             data={casesAggregated.byRegion}
-            colors={getColorThresholds(
-                [0, 1, 10, 20, 50, 100, 500, 1000], '#FFEDA0', '#800026'
-            )}
+            colors={[{
+                    threshold: 0,
+                    color: '#e6e6e6'
+                },
+                ...getColorThresholds(
+                    [1, 10, 20, 50, 100, 500, 1000], '#ecda9a', '#ee4d5a'
+                )
+            ]}
             signValue={(value) => {
-                return declension(value, ['случай', 'случая', 'случаев']);
+                return formatNumber(value) + ' ' + declension(value, ['случай', 'случая', 'случаев']);
             }}
         />
 
-        <h3>Таблица</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Регион</th>
-                    <th>Случаев</th>
-                </tr>
-            </thead>
-            <tbody>
-                { buildTable(
-                    props.regions,
-                    casesAggregated.byRegionSorted,
-                    casesAggregated.byRegionLastDate
-                ) }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colSpan={3}>Данные: { buildSources(casesAggregated.sources) }</td>
-                </tr>
-            </tfoot>
-        </table>
+        <div className="Report__Block">
+            <ReportTable
+                regions={props.regions}
+                byRegionLastDate={casesAggregated.lastDate && casesAggregated.lastDate == props.data.updatedOn
+                    ? casesAggregated.byRegionLastDate
+                    : null}
+                byRegionSorted={casesAggregated.byRegionSorted}
+                sources={casesAggregated.sources}
+            />
+        </div>
 
         {/*  */}
 
-        <h2>Смерти</h2>
+        <div className="Report__Block">
+            <h2>Смерти</h2>
 
-        <p>
-            Всего смертей: {deathsAggregated.total} {
+            <p>
+            Всего смертей: {formatNumber(deathsAggregated.total)} {
                 deathsAggregated.lastDate ? (
-                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + deathsAggregated.totalLastDate + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
+                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(deathsAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
                 ) : ''
             }
         </p>
 
-        <h3>Карта</h3>
+            <h3>Карта</h3>
+        </div>
 
         <RussiaMap
             map={props.map}
             regions={props.regions}
             data={deathsAggregated.byRegion}
-            colors={getColorThresholds(
-                [0, 1, 10, 20, 50, 100, 500, 1000], '#E6E6E6', '#000000'
-            )}
+            colors={[
+                {
+                    threshold: 0,
+                    color: '#e6e6e6'
+                },
+                ...getColorThresholds(
+                    [1, 10, 20, 50, 100, 500, 1000], '#ffc6c4', '#672044'
+                )
+            ]}
             signValue={(value) => {
-                return declension(value, ['смерть', 'смерти', 'смертей']);
+                return formatNumber(value) + ' ' + declension(value, ['смерть', 'смерти', 'смертей']);
             }}
         />
+    
+        <div className="Report__Block">
+            <ReportTable
+                regions={props.regions}
+                byRegionLastDate={deathsAggregated.lastDate && deathsAggregated.lastDate == props.data.updatedOn
+                    ? deathsAggregated.byRegionLastDate
+                    : null}
+                byRegionSorted={deathsAggregated.byRegionSorted}
+                sources={deathsAggregated.sources}
+            />
+        </div>
+    </div>;
+}
 
-        <h3>Таблица</h3>
+interface ReportTableProps {
+    caption?: string
+    regions: RussiaRegions,
+    byRegionSorted: ReportRegionsArray,
+    byRegionLastDate: ReportRegions,
+    sources: string[]
+}
 
-        <table>
+function ReportTable(props: ReportTableProps) {
+    const [isExpanded, setExpanded] = useState(false);
+
+    const regionsArray = isExpanded
+        ? props.byRegionSorted
+        : props.byRegionSorted.slice(0, 10);
+
+    return <div className="ReportTable">
+        <h3 className="ReportTable__Header">{props.caption || 'Таблица'}</h3>
+
+        <table className="ReportTable__Container">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Регион</th>
-                    <th>Смертей</th>
+                    <th style={{width: '75%'}}></th>
+                    <th>Случаев</th>
                 </tr>
             </thead>
             <tbody>
-                { buildTable(
-                    props.regions,
-                    deathsAggregated.byRegionSorted,
-                    deathsAggregated.byRegionLastDate
+                { regionsArray.map(({region, count}, index) => {
+                    return <tr key={index}>
+                        <td>{props.regions[region] ? props.regions[region].ru : region}</td>
+                        <td>{formatNumber(count)} {
+                                props.byRegionLastDate && props.byRegionLastDate[region] ? ' (+' + formatNumber(props.byRegionLastDate[region]) + ')' : ''
+                        }</td>
+                    </tr>;
+                }) }
+                { props.byRegionSorted.length > 10 && (
+                    <tr className="ReportTable__ActionsRow">
+                        <td colSpan={2}>
+                            <button
+                                type="button"
+                                className="TextButton"
+                                onClick={() => {
+                                    setExpanded(!isExpanded);
+                                }}
+                            >
+                                { !isExpanded ? 'Показать все' : 'Скрыть'}
+                            </button>
+                        </td>
+                    </tr>
                 ) }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colSpan={3}>Данные: { buildSources(deathsAggregated.sources) }</td>
+                    <td colSpan={2}>Данные: { props.sources.map((source, index) => {
+                            const url = new URL(source);
+                            return <React.Fragment key={index}>
+                                {index > 0 && ', '}<a
+                                    href={source}
+                                    target="_blank"
+                                >
+                                    {url.host}
+                                </a>
+                            </React.Fragment>;
+                    }) }</td>
                 </tr>
             </tfoot>
         </table>
     </div>;
+}
+
+function formatNumber(value: number) {
+    const valueString = value.toFixed();
+    const res = [];
+    for (let i = valueString.length - 1, j = 1; i >=0; i--, j++) {
+        res.push(valueString[i]);
+        if (j % 3 == 0 && i != 0) {
+            res.push(' ');
+        }
+    }
+    return res.reverse().join('');
 }
 
 function buildDate(date: string) {
@@ -161,7 +237,7 @@ function declension(value: number, array: string[]) {
             res = array[2];
         }
     }
-    return value + ' ' + res;
+    return res;
 }
 
 function getColorThresholds(thresholds: number[], beginColor: string, endColor: string) {
@@ -238,11 +314,11 @@ function aggregateData(data: ReportVersion): AggregatedReport {
             if (!byRegionLastDate) {
                 return 0;
             } else if (!byRegionLastDate[a.region] && byRegionLastDate[b.region]) {
-                return -1;
-            } else if (byRegionLastDate[a.region] && !byRegionLastDate[b.region]) {
                 return 1;
+            } else if (byRegionLastDate[a.region] && !byRegionLastDate[b.region]) {
+                return -1;
             } else {
-                return byRegionLastDate[a.region] - byRegionLastDate[b.region];
+                return byRegionLastDate[b.region] - byRegionLastDate[a.region];
             }
         }
         return b.count - a.count;
@@ -265,30 +341,4 @@ function aggregateData(data: ReportVersion): AggregatedReport {
         byRegionLastDate,
         sources
     };
-}
-
-function buildTable(regions: RussiaRegions, regionsArray: ReportRegionsArray, lastDateRegions?: ReportRegions) {
-    return regionsArray.map(({region, count}, index) => {
-        return <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{regions[region] ? regions[region].ru : region}</td>
-            <td>{count} {
-                    lastDateRegions && lastDateRegions[region] ? ' (+' + lastDateRegions[region] + ')' : ''
-            }</td>
-        </tr>;
-    });
-}
-
-function buildSources(sources: string[]) {
-    return sources.map((source, index) => {
-            const url = new URL(source);
-            return <React.Fragment key={index}>
-                {index > 0 && ', '}<a
-                    href={source}
-                    target="_blank"
-                >
-                    {url.host}
-                </a>
-            </React.Fragment>;
-    });
 }

@@ -45,7 +45,13 @@ module.exports = (env) => {
                 {
                     test: /\.png$/,
                     loaders: [
-                        'file-loader'
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: '[name].[ext]',
+                                outputPath: 'images/'
+                            }
+                        }
                     ]
                 }
             ]

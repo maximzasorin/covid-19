@@ -94,6 +94,11 @@ export type ReportRegions = {
     [key in RussiaRegionIso3166]?: number
 };
 
+export type ReportRegionsArray = {
+    region: RussiaRegionIso3166,
+    count: number
+}[];
+
 export type ReportVersion = {
     [key in string]: {
         sourceUrls: string[],
