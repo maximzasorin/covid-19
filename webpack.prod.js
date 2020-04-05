@@ -7,7 +7,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = (env) => merge(common(env), {
     mode: 'production',
     output: {
-        path: __dirname + '/app',
         filename: '[name].[contenthash].js',
     },
     performance: {

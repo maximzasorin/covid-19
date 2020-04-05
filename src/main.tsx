@@ -13,7 +13,6 @@ import Report from './Report';
 import { fixChukotka } from './RussiaMap';
 import './styles.scss';
 
-
 function loadFonts() {
     return new Promise((resolve) => {
         WebFont.load({

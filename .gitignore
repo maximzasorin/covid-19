@@ -1,5 +1,5 @@
 .DS_Store
 /node_modules
-/app
+/build
 /yarn-error.log
 /report.html
