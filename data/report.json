@@ -1,0 +1,687 @@
+{
+    "updatedOn": "2020-04-03",
+    "cases": {
+        "2020-01-31": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/7656549"
+            ],
+            "regions": {
+                "RU-TYU": 1,
+                "RU-ZAB": 1
+            }
+        },
+        "2020-03-02": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13870"
+            ],
+            "regions": {
+                "RU-MOS": 1
+            }
+        },
+        "2020-03-05": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13897"
+            ],
+            "regions": {
+                "RU-SPE": 1
+            }
+        },
+        "2020-03-06": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13916"
+            ],
+            "regions": {
+                "RU-MOW": 5,
+                "RU-NIZ": 1
+            }
+        },
+        "2020-03-07": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13920"
+            ],
+            "regions": {
+                "RU-LIP": 3,
+                "RU-SPE": 1
+            }
+        },
+        "2020-03-08": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13923"
+            ],
+            "regions": {
+                "RU-MOS": 1,
+                "RU-MOW": 1,
+                "RU-KGD": 1
+            }
+        },
+        "2020-03-09": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13925"
+            ],
+            "regions": {
+                "RU-MOW": 3
+            }
+        },
+        "2020-03-11": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/7951893"
+            ],
+            "regions": {
+                "RU-MOS": 2,
+                "RU-MOW": 6
+            }
+        },
+        "2020-03-12": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13971"
+            ],
+            "regions": {
+                "RU-MOW": 4,
+                "RU-KGD": 1,
+                "RU-KDA": 1
+            }
+        },
+        "2020-03-13": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13982"
+            ],
+            "regions": {
+                "RU-MOS": 1,
+                "RU-MOW": 5,
+                "RU-LEN": 1,
+                "RU-SPE": 3,
+                "RU-PER": 1
+            }
+        },
+        "2020-03-14": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13988"
+            ],
+            "regions": {
+                "RU-MOS": 1,
+                "RU-MOW": 9,
+                "RU-KGD": 1,
+                "RU-SPE": 1,
+                "RU-KEM": 2
+            }
+        },
+        "2020-03-15": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13991"
+            ],
+            "regions": {
+                "RU-MOS": 3,
+                "RU-TYU": 1
+            }
+        },
+        "2020-03-16": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=13999"
+            ],
+            "regions": {
+                "RU-MOS": 1,
+                "RU-MOW": 20,
+                "RU-KO": 1,
+                "RU-SPE": 3,
+                "RU-PER": 1,
+                "RU-KIR": 1,
+                "RU-SAM": 3
+            }
+        },
+        "2020-03-17": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14033"
+            ],
+            "regions": {
+                "RU-KLU": 1,
+                "RU-MOS": 1,
+                "RU-TAM": 1,
+                "RU-TVE": 2,
+                "RU-YAR": 1,
+                "RU-MOW": 4,
+                "RU-ARK": 1,
+                "RU-KGD": 2,
+                "RU-TA": 1,
+                "RU-NIZ": 1,
+                "RU-PNZ": 1,
+                "RU-SAM": 2,
+                "RU-SVE": 1,
+                "RU-KK": 1,
+                "RU-KYA": 1
+            }
+        },
+        "2020-03-18": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14045"
+            ],
+            "regions": {
+                "RU-MOW": 31,
+                "RU-NVS": 1,
+                "RU-TOM": 1
+            }
+        },
+        "2020-03-19": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14060"
+            ],
+            "regions": {
+                "RU-IVA": 1,
+                "RU-MOS": 5,
+                "RU-RYA": 1,
+                "RU-TAM": 2,
+                "RU-TUL": 3,
+                "RU-TVE": 1,
+                "RU-VOR": 2,
+                "RU-MOW": 12,
+                "RU-MUR": 1,
+                "RU-SPE": 1,
+                "RU-KDA": 2,
+                "RU-CU": 1,
+                "RU-PER": 1,
+                "RU-KIR": 2,
+                "RU-NIZ": 1,
+                "RU-ORE": 1,
+                "RU-SAR": 1,
+                "RU-SVE": 5,
+                "RU-KHM": 1,
+                "RU-KYA": 3,
+                "RU-NVS": 1,
+                "RU-SA": 1,
+                "RU-KHA": 3
+            }
+        },
+        "2020-03-20": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14070"
+            ],
+            "regions": {
+                "RU-MOS": 1,
+                "RU-MOW": 33,
+                "RU-SPE": 4,
+                "RU-KIR": 2,
+                "RU-SAM": 4,
+                "RU-ULY": 1,
+                "RU-TYU": 1,
+                "RU-NVS": 2,
+                "RU-SA": 6
+            }
+        },
+        "2020-03-21": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14084"
+            ],
+            "regions": {
+                "RU-MOS": 17,
+                "RU-RYA": 1,
+                "RU-TUL": 2,
+                "RU-MOW": 6,
+                "RU-KGD": 2,
+                "RU-SPE": 2,
+                "UA-43": 1,
+                "RU-KDA": 2,
+                "RU-KB": 2,
+                "RU-STA": 1,
+                "RU-TA": 5,
+                "RU-NIZ": 4,
+                "RU-CHE": 1,
+                "RU-KGN": 1,
+                "RU-SVE": 3,
+                "RU-KHM": 1,
+                "RU-KYA": 1,
+                "RU-KHA": 1
+            }
+        },
+        "2020-03-22": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14086"
+            ],
+            "regions": {
+                "RU-BRY": 1,
+                "RU-MOW": 54,
+                "RU-ARK": 1,
+                "RU-NGR": 1,
+                "RU-UD": 2,
+                "RU-KIR": 2
+            }
+        },
+        "2020-03-23": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14087"
+            ],
+            "regions": {
+                "RU-MOW": 71
+            }
+        },
+        "2020-03-24": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14104"
+            ],
+            "regions": {
+                "RU-KLU": 1,
+                "RU-LIP": 2,
+                "RU-ORL": 2,
+                "RU-VOR": 4,
+                "RU-MOW": 28,
+                "RU-LEN": 2,
+                "RU-SPE": 5,
+                "RU-VGG": 1,
+                "RU-CE": 1,
+                "RU-BA": 3,
+                "RU-TA": 1,
+                "RU-SAM": 1,
+                "RU-SVE": 4,
+                "RU-PRI": 2
+            }
+        },
+        "2020-03-25": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14108"
+            ],
+            "regions": {
+                "RU-BRY": 1,
+                "RU-MOS": 6,
+                "RU-TUL": 2,
+                "RU-MOW": 120,
+                "RU-KO": 2,
+                "RU-ARK": 1,
+                "RU-LEN": 1,
+                "RU-PSK": 4,
+                "UA-43": 6,
+                "RU-KDA": 4,
+                "RU-ROS": 1,
+                "RU-KB": 2,
+                "RU-STA": 1,
+                "RU-BA": 1,
+                "RU-PER": 2,
+                "RU-NIZ": 1,
+                "RU-ORE": 3,
+                "RU-PNZ": 1,
+                "RU-CHE": 1,
+                "RU-SA": 3
+            }
+        },
+        "2020-03-26": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14115"
+            ],
+            "regions": {
+                "RU-MOW": 136,
+                "RU-PSK": 2,
+                "RU-SPE": 5,
+                "RU-KB": 3,
+                "RU-TA": 3,
+                "RU-PER": 5,
+                "RU-SAM": 2,
+                "RU-CHE": 3,
+                "RU-SVE": 7,
+                "RU-KHM": 2,
+                "RU-KK": 1,
+                "RU-KYA": 3,
+                "RU-KEM": 1,
+                "RU-NVS": 1,
+                "RU-TOM": 1,
+                "RU-BU": 2,
+                "RU-SA": 4,
+                "RU-KHA": 1
+            }
+        },
+        "2020-03-27": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14125"
+            ],
+            "regions": {
+                "RU-IVA": 1,
+                "RU-MOS": 8,
+                "RU-ORL": 1,
+                "RU-TUL": 1,
+                "RU-YAR": 1,
+                "RU-MOW": 157,
+                "UA-43": 7,
+                "RU-ROS": 1,
+                "RU-VGG": 3,
+                "UA-40": 5,
+                "RU-CE": 2,
+                "RU-DA": 1,
+                "RU-MO": 2,
+                "RU-TA": 1,
+                "RU-UD": 2,
+                "RU-KIR": 1,
+                "RU-SAM": 2
+            }
+        },
+        "2020-03-28": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14132"
+            ],
+            "regions": {
+                "RU-BRY": 1,
+                "RU-IVA": 5,
+                "RU-KOS": 1,
+                "RU-LIP": 3,
+                "RU-MOS": 36,
+                "RU-SMO": 1,
+                "RU-TUL": 3,
+                "RU-MOW": 114,
+                "RU-KGD": 3,
+                "RU-LEN": 4,
+                "RU-SPE": 11,
+                "RU-AD": 1,
+                "UA-43": 1,
+                "RU-KDA": 8,
+                "RU-CE": 2,
+                "RU-TA": 3,
+                "RU-PER": 1,
+                "RU-NIZ": 3,
+                "RU-ORE": 2,
+                "RU-SAR": 1,
+                "RU-CHE": 4,
+                "RU-SVE": 4,
+                "RU-KYA": 4,
+                "RU-NVS": 2,
+                "RU-BU": 6,
+                "RU-SAK": 4
+            }
+        },
+        "2020-03-29": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14134"
+            ],
+            "regions": {
+                "RU-BEL": 1,
+                "RU-LIP": 1,
+                "RU-MOS": 27,
+                "RU-RYA": 1,
+                "RU-YAR": 1,
+                "RU-MOW": 197,
+                "RU-KO": 4,
+                "RU-LEN": 2,
+                "RU-MUR": 2,
+                "RU-NGR": 2,
+                "RU-SPE": 5,
+                "RU-CE": 4,
+                "RU-BA": 1,
+                "RU-MO": 1,
+                "RU-KIR": 1,
+                "RU-ORE": 5,
+                "RU-CHE": 3,
+                "RU-TYU": 1,
+                "RU-KHM": 1,
+                "RU-IRK": 1,
+                "RU-NVS": 1,
+                "RU-OMS": 3,
+                "RU-TOM": 1,
+                "RU-SA": 1,
+                "RU-KHA": 2,
+                "RU-AMU": 1
+            }
+        },
+        "2020-03-30": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14137"
+            ],
+            "regions": {
+                "RU-BEL": 3,
+                "RU-IVA": 2,
+                "RU-KLU": 1,
+                "RU-LIP": 1,
+                "RU-MOS": 7,
+                "RU-RYA": 2,
+                "RU-TUL": 1,
+                "RU-TVE": 1,
+                "RU-VLA": 2,
+                "RU-MOW": 212,
+                "RU-KO": 15,
+                "RU-ARK": 4,
+                "RU-KGD": 1,
+                "RU-LEN": 2,
+                "RU-MUR": 2,
+                "RU-PSK": 3,
+                "RU-VLG": 2,
+                "RU-SPE": 8,
+                "RU-AD": 3,
+                "RU-KL": 1,
+                "RU-DA": 3,
+                "RU-KB": 2,
+                "RU-STA": 1,
+                "RU-ME": 2,
+                "RU-PER": 2,
+                "RU-KIR": 3,
+                "RU-ORE": 1,
+                "RU-SAR": 2,
+                "RU-CHE": 2,
+                "RU-KK": 1,
+                "RU-ALT": 1,
+                "RU-KYA": 2,
+                "RU-IRK": 1,
+                "RU-NVS": 1,
+                "RU-BU": 5
+            }
+        },
+        "2020-03-31": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14147"
+            ],
+            "regions": {
+                "RU-KOS": 1,
+                "RU-VOR": 2,
+                "RU-MOW": 387,
+                "RU-LEN": 3,
+                "RU-MUR": 6,
+                "RU-SPE": 48,
+                "UA-43": 1,
+                "RU-KL": 1,
+                "RU-AST": 2,
+                "RU-ROS": 3,
+                "RU-DA": 9,
+                "RU-BA": 2,
+                "RU-TA": 5,
+                "RU-NIZ": 1,
+                "RU-PNZ": 5,
+                "RU-SAM": 1,
+                "RU-SVE": 9,
+                "RU-TYU": 2,
+                "RU-ALT": 1,
+                "RU-IRK": 1,
+                "RU-BU": 6,
+                "RU-KHA": 1,
+                "RU-PRI": 2,
+                "RU-MAG": 1
+            }
+        },
+        "2020-04-01": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14157"
+            ],
+            "regions": {
+                "RU-BRY": 2,
+                "RU-IVA": 2,
+                "RU-KRS": 3,
+                "RU-LIP": 1,
+                "RU-MOS": 15,
+                "RU-TAM": 3,
+                "RU-TUL": 5,
+                "RU-TVE": 1,
+                "RU-VLA": 1,
+                "RU-VOR": 4,
+                "RU-MOW": 267,
+                "RU-KO": 32,
+                "RU-LEN": 6,
+                "RU-VLG": 7,
+                "RU-SPE": 27,
+                "RU-KDA": 5,
+                "RU-VGG": 4,
+                "RU-CE": 1,
+                "RU-DA": 2,
+                "RU-KB": 2,
+                "RU-SE": 2,
+                "RU-BA": 1,
+                "RU-MO": 1,
+                "RU-PNZ": 4,
+                "RU-SAR": 11,
+                "RU-CHE": 7,
+                "RU-KHM": 3,
+                "RU-ALT": 1,
+                "RU-KYA": 6,
+                "RU-NVS": 1,
+                "RU-OMS": 4,
+                "RU-BU": 6,
+                "RU-KHA": 1,
+                "RU-PRI": 1,
+                "RU-SAK": 1
+            }
+        },
+        "2020-04-02": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14160"
+            ],
+            "regions": {
+                "RU-MOW": 595,
+                "RU-MOS": 43,
+                "RU-SPE": 22,
+                "RU-NGR": 13,
+                "RU-LEN": 11,
+                "RU-DA": 10,
+                "RU-KGD": 7,
+                "RU-PER": 7,
+                "RU-STA": 5,
+                "RU-ORE": 5,
+                "RU-SVE": 5,
+                "RU-BU": 5,
+                "RU-KYA": 5,
+                "RU-LIP": 4,
+                "RU-MUR": 4,
+                "RU-ROS": 4,
+                "RU-IRK": 4,
+                "RU-VLG": 3,
+                "RU-KLU": 2,
+                "RU-KO": 2,
+                "RU-SE": 2,
+                "RU-BA": 2,
+                "RU-ME": 2,
+                "RU-SAM": 2,
+                "RU-YAN": 2,
+                "RU-OMS": 2,
+                "RU-BEL": 1,
+                "RU-AD": 1,
+                "RU-ALT": 1
+            }
+        },
+        "2020-04-03": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14171"
+            ],
+            "regions": {
+                "RU-MOW": 448,
+                "RU-MOS": 34,
+                "RU-KDA": 17,
+                "RU-PNZ": 11,
+                "RU-LEN": 10,
+                "RU-YAN": 10,
+                "RU-SPE": 9,
+                "RU-KHM": 8,
+                "RU-TA": 6,
+                "RU-KL": 5,
+                "RU-TYU": 5,
+                "RU-SAR": 4,
+                "RU-LIP": 3,
+                "RU-AST": 3,
+                "RU-KIR": 3,
+                "RU-YEV": 3,
+                "RU-BRY": 2,
+                "RU-IVA": 2,
+                "RU-CE": 2,
+                "RU-CHE": 2,
+                "RU-PRI": 2,
+                "UA-43": 2,
+                "RU-KRS": 1,
+                "RU-RYA": 1,
+                "RU-TVE": 1,
+                "RU-ARK": 1,
+                "RU-IN": 1,
+                "RU-PER": 1,
+                "RU-SVE": 1,
+                "RU-BU": 1,
+                "RU-IRK": 1,
+                "RU-KHA": 1
+            }
+        }
+    },
+    "deaths": {
+        "2020-01-26": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8077753"
+            ],
+            "regions": {
+                "RU-MOW": 2
+            }
+        },
+        "2020-01-28": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8101881"
+            ],
+            "regions": {
+                "RU-MOW": 2
+            }
+        },
+        "2020-01-29": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8108073"
+            ],
+            "regions": {
+                "RU-ORE": 1,
+                "RU-SPE": 1,
+                "RU-MOW": 2
+            }
+        },
+        "2020-01-30": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8113069"
+            ],
+            "regions": {
+                "RU-PSK": 1
+            }
+        },
+        "2020-01-31": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8122471"
+            ],
+            "regions": {
+                "RU-MOW": 5,
+                "RU-SPE": 1,
+                "RU-PNZ": 1,
+                "RU-VLA": 1
+            }
+        },
+        "2020-01": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8131357"
+            ],
+            "regions": {
+                "RU-MOW": 5,
+                "RU-MOS": 1,
+                "RU-PSK": 1
+            }
+        },
+        "2020-04-02": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8140921"
+            ],
+            "regions": {
+                "RU-MOW": 3,
+                "RU-MOS": 1,
+                "RU-CE": 1,
+                "RU-PER": 1
+            }
+        },
+        "2020-04-03": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8151485"
+            ],
+            "regions": {
+                "RU-KO": 2,
+                "RU-MOW": 1,
+                "RU-PER": 1
+            }
+        }
+    }
+}
