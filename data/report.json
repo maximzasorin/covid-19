@@ -1,5 +1,5 @@
 {
-    "updatedOn": "2020-04-03",
+    "updatedOn": "2020-04-04",
     "cases": {
         "2020-01-31": {
             "sourceUrls": [
@@ -604,6 +604,45 @@
                 "RU-IRK": 1,
                 "RU-KHA": 1
             }
+        },
+        "2020-04-04": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14179"
+            ],
+            "regions": {
+                "RU-MOW": 434,
+                "RU-MOS": 49,
+                "RU-SPE": 15,
+                "RU-BRY": 12,
+                "RU-IVA": 10,
+                "RU-RYA": 6,
+                "RU-LEN": 6,
+                "RU-KOS": 5,
+                "RU-BU": 4,
+                "RU-ORL": 3,
+                "RU-KO": 3,
+                "RU-CE": 3,
+                "RU-KIR": 3,
+                "RU-CHE": 3,
+                "RU-ALT": 3,
+                "RU-AMU": 3,
+                "RU-VOR": 2,
+                "RU-TUL": 2,
+                "RU-YAR": 2,
+                "RU-AD": 2,
+                "RU-BEL": 1,
+                "RU-KLU": 1,
+                "RU-SMO": 1,
+                "RU-TAM": 1,
+                "RU-VLG": 1,
+                "RU-SE": 1,
+                "RU-MO": 1,
+                "RU-UD": 1,
+                "RU-KGN": 1,
+                "RU-SVE": 1,
+                "RU-OMS": 1,
+                "RU-SAK": 1
+            }
         }
     },
     "deaths": {
@@ -681,6 +720,16 @@
                 "RU-KO": 2,
                 "RU-MOW": 1,
                 "RU-PER": 1
+            }
+        },
+        "2020-04-04": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8161303"
+            ],
+            "regions": {
+                "RU-MOW": 7,
+                "RU-KOS": 1,
+                "RU-PRI": 1
             }
         }
     }
