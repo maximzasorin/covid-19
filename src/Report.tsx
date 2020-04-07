@@ -75,6 +75,7 @@ export default function(props: ReportProps) {
 
         <div className="Report__Block">
             <ReportTable
+                valueColumn="Случаев"
                 regions={props.regions}
                 byRegionLastDate={casesAggregated.lastDate && casesAggregated.lastDate == props.data.updatedOn
                     ? casesAggregated.byRegionLastDate
@@ -92,7 +93,7 @@ export default function(props: ReportProps) {
             <p>
             Всего смертей: {formatNumber(deathsAggregated.total)} {
                 deathsAggregated.lastDate ? (
-                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(deathsAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
+                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(deathsAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых смертей не зафиксировано)'
                 ) : ''
             }
         </p>
@@ -120,6 +121,7 @@ export default function(props: ReportProps) {
     
         <div className="Report__Block">
             <ReportTable
+                valueColumn="Смертей"
                 regions={props.regions}
                 byRegionLastDate={deathsAggregated.lastDate && deathsAggregated.lastDate == props.data.updatedOn
                     ? deathsAggregated.byRegionLastDate
@@ -133,6 +135,7 @@ export default function(props: ReportProps) {
 
 interface ReportTableProps {
     caption?: string
+    valueColumn?: string
     regions: RussiaRegions,
     byRegionSorted: ReportRegionsArray,
     byRegionLastDate: ReportRegions,
@@ -153,7 +156,7 @@ function ReportTable(props: ReportTableProps) {
             <thead>
                 <tr>
                     <th style={{width: '75%'}}></th>
-                    <th>Случаев</th>
+                    <th>{props.valueColumn}</th>
                 </tr>
             </thead>
             <tbody>
