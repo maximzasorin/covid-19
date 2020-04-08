@@ -1,0 +1,65 @@
+{
+    "updatedOn": "2020-04-08",
+    "cases": {
+        "2020-03-29": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/29-03-2020/u-belgorodtsa-nashli-koronavirus-na-desyatyy-den-samoizolyatsii"
+            ],
+            "regions": {
+                "21": 1
+            }
+        },
+        "2020-03-30": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/07-04-2020/koronavirus-v-belgorodskoy-oblasti-u-kogo-podtverdili-covid-19"
+            ],
+            "regions": {
+                "3": 2,
+                "1": 1
+            }
+        },
+        "2020-04-02": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/02-04-2020/zhitel-starogo-oskola-zarazilsya-koronavirusom-v-moskve"
+            ],
+            "regions": {
+                "19": 1
+            }
+        },
+        "2020-04-04": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/04-04-2020/v-belgorode-vyyavili-pervogo-zarazhyonnogo-koronavirusom"
+            ],
+            "regions": {
+                "2": 1
+            }
+        },
+        "2020-04-06": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/06-04-2020/za-sutki-koronavirus-vyyavili-u-troih-zhiteley-belgoroda"
+            ],
+            "regions": {
+                "2": 3,
+                "3": 1
+            }
+        },
+        "2020-04-07": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/07-04-2020/v-belgorode-chislo-zabolevshih-koronavirusom-uvelichilos-do-semi"
+            ],
+            "regions": {
+                "2": 2,
+                "6": 1
+            }
+        },
+        "2020-04-08": {
+            "sourceUrls": [
+                "https://bel.ru/news/society/08-04-2020/eschyo-dvoe-detey-v-belgorodskoy-oblasti-zaboleli-koronavirusom"
+            ],
+            "regions": {
+                "12": 3,
+                "6": 1
+            }
+        }
+    }
+}
