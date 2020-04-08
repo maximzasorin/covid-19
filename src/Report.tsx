@@ -45,13 +45,26 @@ export default function(props: ReportProps) {
 
             <h2>Подтвержденные случаи</h2>
 
-            <p>
-                Всего случаев: {formatNumber(casesAggregated.total)} {
-                    casesAggregated.lastDate ? (
-                        casesAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(casesAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
-                    ) : ''
-                }
-            </p>
+            { casesAggregated.total > 0
+                ? (
+                    <React.Fragment>
+                        <p>
+                            Всего случаев: {formatNumber(casesAggregated.total)} {
+                                casesAggregated.lastDate ? (
+                                    casesAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(casesAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
+                                ) : ''
+                            }
+                        </p>
+
+                        <p>
+                            { casesAggregated.byRegionSorted.length == Object.entries(props.regions).length
+                                ? 'Случаи зафиксированы во всех регионах'
+                                : 'Случаи зафиксированы в ' + casesAggregated.byRegionSorted.length + ' из ' + Object.entries(props.regions).length + ' регионов' }
+                        </p>
+                    </React.Fragment>
+                ) : (
+                    <p>Случаев не зафиксировано</p>
+                ) }
 
             <h3>Карта</h3>
         </div>
@@ -90,13 +103,26 @@ export default function(props: ReportProps) {
         <div className="Report__Block">
             <h2>Смерти</h2>
 
-            <p>
-            Всего смертей: {formatNumber(deathsAggregated.total)} {
-                deathsAggregated.lastDate ? (
-                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(deathsAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых смертей не зафиксировано)'
-                ) : ''
-            }
-        </p>
+            { casesAggregated.total > 0
+                ? (
+                    <React.Fragment>
+                        <p>
+                            Всего смертей: {formatNumber(deathsAggregated.total)} {
+                                deathsAggregated.lastDate ? (
+                                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(deathsAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых смертей не зафиксировано)'
+                                ) : ''
+                            }
+                        </p>
+
+                        <p>
+                            { deathsAggregated.byRegionSorted.length == Object.entries(props.regions).length
+                                ? 'Смерти зафиксированы во всех регионах России'
+                                : 'Смерти зафиксированы в ' + deathsAggregated.byRegionSorted.length + ' из ' + Object.entries(props.regions).length + ' регионов' }
+                        </p>
+                    </React.Fragment>
+                ) : (
+                    <p>Смертей нет</p>
+                ) }
 
             <h3>Карта</h3>
         </div>
@@ -159,46 +185,59 @@ function ReportTable(props: ReportTableProps) {
                     <th>{props.valueColumn}</th>
                 </tr>
             </thead>
-            <tbody>
-                { regionsArray.map(({region, count}, index) => {
-                    return <tr key={index}>
-                        <td>{props.regions[region] ? props.regions[region].ru : region}</td>
-                        <td>{formatNumber(count)} {
-                                props.byRegionLastDate && props.byRegionLastDate[region] ? ' (+' + formatNumber(props.byRegionLastDate[region]) + ')' : ''
-                        }</td>
-                    </tr>;
-                }) }
-                { props.byRegionSorted.length > 10 && (
-                    <tr className="ReportTable__ActionsRow">
-                        <td colSpan={2}>
-                            <button
-                                type="button"
-                                className="TextButton"
-                                onClick={() => {
-                                    setExpanded(!isExpanded);
-                                }}
-                            >
-                                { !isExpanded ? 'Показать все' : 'Скрыть'}
-                            </button>
-                        </td>
-                    </tr>
-                ) }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colSpan={2}>Данные: { props.sources.map((source, index) => {
-                            const url = new URL(source);
-                            return <React.Fragment key={index}>
-                                {index > 0 && ', '}<a
-                                    href={source}
-                                    target="_blank"
-                                >
-                                    {url.host}
-                                </a>
-                            </React.Fragment>;
-                    }) }</td>
-                </tr>
-            </tfoot>
+            {
+                props.byRegionSorted.length > 0
+                    ? (
+                        <React.Fragment>
+                            <tbody>
+                                { regionsArray.map(({region, count}, index) => {
+                                    return <tr key={index}>
+                                        <td>{props.regions[region] ? props.regions[region].ru : region}</td>
+                                        <td>{formatNumber(count)} {
+                                                props.byRegionLastDate && props.byRegionLastDate[region] ? ' (+' + formatNumber(props.byRegionLastDate[region]) + ')' : ''
+                                        }</td>
+                                    </tr>;
+                                }) }
+                                { props.byRegionSorted.length > 10 && (
+                                    <tr className="ReportTable__ActionsRow">
+                                        <td colSpan={2}>
+                                            <button
+                                                type="button"
+                                                className="TextButton"
+                                                onClick={() => {
+                                                    setExpanded(!isExpanded);
+                                                }}
+                                            >
+                                                { !isExpanded ? 'Показать все' : 'Скрыть'}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ) }
+                            </tbody>
+                            { props.sources.length > 0 && <tfoot>
+                                <tr>
+                                    <td colSpan={2}>Данные: { props.sources.map((source, index) => {
+                                            const url = new URL(source);
+                                            return <React.Fragment key={index}>
+                                                {index > 0 && ', '}<a
+                                                    href={source}
+                                                    target="_blank"
+                                                >
+                                                    {url.host}
+                                                </a>
+                                            </React.Fragment>;
+                                    }) }</td>
+                                </tr>
+                                </tfoot> }
+                        </React.Fragment>
+                    ) : (
+                        <tbody>
+                            <tr>
+                                <td colSpan={2}>Нет данных</td>
+                            </tr>
+                        </tbody>
+                    )
+            }
         </table>
     </div>;
 }
