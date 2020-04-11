@@ -62,9 +62,9 @@ function App(props: AppProps) {
         loadFonts()
             .then(() => {
                 return Promise.all([
-                    axiosInstance.get('/data/russia.geojson'),
-                    axiosInstance.get('/data/russia-regions.json'),
-                    axiosInstance.get('/data/report.json')
+                    axiosInstance.get('/data/maps/ru.geojson'),
+                    axiosInstance.get('/data/regions/ru.json'),
+                    axiosInstance.get('/data/reports/ru.json')
                 ]);
             })
             .then((responses) => {
