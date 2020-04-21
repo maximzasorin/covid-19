@@ -99,6 +99,19 @@ export type ReportRegionsArray = {
     count: number
 }[];
 
+export type ReportDate = {
+    date: string,
+    sources: string[],
+    countAcc: number,
+    count: number
+};
+
+export type ReportDateArray = ReportDate[];
+
+export type ReportDateMap = {
+    [key in string]: ReportDate
+};
+
 export type ReportVersion = {
     [key in string]: {
         sourceUrls: string[],
