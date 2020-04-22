@@ -1,5 +1,5 @@
 {
-    "updatedOn": "2020-04-21",
+    "updatedOn": "2020-04-22",
     "cases": {
         "2020-01-31": {
             "sourceUrls": [
@@ -1780,6 +1780,91 @@
                 "UA-43": 1,
                 "UA-40": 1
             }
+        },
+        "2020-04-22": {
+            "sourceUrls": [
+                "https://rospotrebnadzor.ru/about/info/news/news_details.php?ELEMENT_ID=14297"
+            ],
+            "regions": {
+                "RU-MOW": 2548,
+                "RU-MOS": 631,
+                "RU-SPE": 294,
+                "RU-RYA": 76,
+                "RU-TA": 75,
+                "RU-KLU": 72,
+                "RU-MUR": 71,
+                "RU-NIZ": 69,
+                "RU-PRI": 62,
+                "RU-TUL": 52,
+                "RU-ROS": 52,
+                "RU-BRY": 49,
+                "RU-DA": 46,
+                "RU-IN": 43,
+                "RU-LEN": 41,
+                "RU-ORL": 40,
+                "RU-KC": 39,
+                "RU-SMO": 36,
+                "RU-KRS": 34,
+                "RU-SE": 34,
+                "RU-UD": 34,
+                "RU-MO": 30,
+                "RU-PER": 29,
+                "RU-TYU": 29,
+                "RU-KHA": 29,
+                "RU-KIR": 28,
+                "RU-ORE": 28,
+                "RU-BU": 28,
+                "RU-TVE": 27,
+                "RU-CU": 27,
+                "RU-NGR": 26,
+                "RU-VOR": 25,
+                "RU-BA": 25,
+                "RU-LIP": 24,
+                "RU-KB": 23,
+                "RU-BEL": 22,
+                "RU-ME": 22,
+                "RU-SAR": 22,
+                "RU-KYA": 22,
+                "RU-KO": 20,
+                "RU-CE": 20,
+                "RU-KDA": 20,
+                "RU-KGD": 19,
+                "RU-TAM": 18,
+                "RU-PNZ": 16,
+                "RU-NVS": 16,
+                "RU-KAM": 15,
+                "RU-VLA": 13,
+                "RU-IVA": 12,
+                "RU-SAM": 12,
+                "RU-YAR": 11,
+                "RU-KL": 11,
+                "RU-STA": 11,
+                "RU-AST": 11,
+                "RU-VGG": 11,
+                "RU-ZAB": 11,
+                "RU-SVE": 10,
+                "RU-CHE": 10,
+                "RU-ULY": 9,
+                "RU-ALT": 9,
+                "RU-KEM": 9,
+                "RU-YEV": 9,
+                "RU-KOS": 7,
+                "RU-VLG": 7,
+                "RU-IRK": 7,
+                "RU-KHM": 6,
+                "RU-TOM": 6,
+                "RU-AD": 5,
+                "RU-SA": 5,
+                "RU-PSK": 4,
+                "RU-OMS": 4,
+                "RU-CHU": 4,
+                "RU-YAN": 3,
+                "RU-KK": 3,
+                "RU-AMU": 3,
+                "RU-ARK": 2,
+                "RU-MAG": 2,
+                "UA-40": 1
+            }
         }
     },
     "deaths": {
@@ -2122,6 +2207,31 @@
                 "RU-IRK": 1,
                 "RU-STA": 1,
                 "RU-KB": 1
+            }
+        },
+        "2020-04-22": {
+            "sourceUrls": [
+                "https://tass.ru/obschestvo/8302463",
+                "https://tass.ru/obschestvo/8283293"
+            ],
+            "regions": {
+                "RU-MOW": 28,
+                "RU-MOS": 7,
+                "RU-KDA": 3,
+                "RU-SPE": 3,
+                "RU-IN": 3,
+                "RU-KLU": 2,
+                "RU-KHM": 1,
+                "RU-VGG": 1,
+                "RU-VOR": 1,
+                "RU-KIR": 1,
+                "RU-NIZ": 1,
+                "RU-ORL": 1,
+                "RU-TUL": 1,
+                "RU-AD": 1,
+                "RU-KO": 1,
+                "RU-CE": 1,
+                "RU-STA": 1
             }
         }
     }
