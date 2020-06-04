@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"/><title>Redirecting...</title></head><body><script>(function() {
+                var basePath = '/covid-19/',
+                    path = location.href;
+                if (path.indexOf(basePath) === 0) {
+                    path = path.substr(basePath.length);
+                }
+                localStorage.setItem('notFoundLocation', path);
+                location.href = basePath;
+            })();</script><script src="/covid-19/main.c019e7d584f94cee35bf.js"></script></body></html>
