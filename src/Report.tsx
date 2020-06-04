@@ -1,107 +1,130 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import chroma from 'chroma-js';
 import { GeoJSON } from 'geojson';
 import formatDate from 'date-fns/format';
 import parseDate from 'date-fns/parse';
 import addDays from 'date-fns/addDays';
 import dateRuLocale from 'date-fns/locale/ru';
+import punycode from 'punycode';
 
+import Map from './Map';
 import {
-    RussiaRegions,
-    Report,
-    ReportVersion,
+    AggregatedReport,
+    Region,
+    Regions,
     ReportRegions,
     ReportRegionsArray,
     ReportDateArray,
     ReportDate,
-    ReportDateMap
+    ReportDateMap,
+    ReportFilter,
+    ReportData,
+    ReportVersion,
+    MapFilter,
+    Thresholds
 } from './Interfaces';
-import RussiaMap from './RussiaMap';
 
 export interface ReportProps {
     map: GeoJSON,
-    regions: RussiaRegions,
-    data: Report
-}
-
-interface AggregatedReport {
-    total: number,
-    byRegion: ReportRegions,
-    byRegionSorted: ReportRegionsArray,
-    byDateSorted: ReportDateArray,
-    lastDate: string,
-    totalLastDate: number,
-    byRegionLastDate: ReportRegions
-    sources: string[]
+    mapAccessToken: string,
+    mapFilter: MapFilter,
+    region: Region,
+    subregions?: Regions,
+    report: ReportData,
+    reportFilter: ReportFilter,
+    thresholds: Thresholds,
+    note?: string
 }
 
 export default function(props: ReportProps) {
-    const casesAggregated = aggregateData(props.data.updatedOn, props.data.cases);
-    const deathsAggregated = aggregateData(props.data.updatedOn, props.data.deaths);
+    const cases = aggregateData(
+        props.report.updatedOn,
+        props.report.cases,
+        props.reportFilter.subregion
+    );
+
+    const deaths = aggregateData(
+        props.report.updatedOn,
+        props.report.deaths,
+        props.reportFilter.subregion
+    );
 
     return <div className="Report">
-        <header className="Report__Header">
-            <h1>
-                COVID-19 в России
-            </h1>
-        </header>
         <div className="Report__Block">
-            <p>Данные на {buildDate(props.data.updatedOn)}</p>
+            <p>Данные на {buildDate(props.report.updatedOn)}</p>
+
+            {props.note && <p className="Report__Note">{props.note}</p>}
 
             <h2>Подтвержденные случаи</h2>
 
-            { casesAggregated.total > 0
+            { cases.total > 0
                 ? (
                     <React.Fragment>
                         <p>
-                            Всего случаев: {formatNumber(casesAggregated.total)} {
-                                casesAggregated.lastDate ? (
-                                    casesAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(casesAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
-                                ) : ''
+                            Всего случаев: {formatNumber(cases.total)} {
+                                cases.totalLastDate > 0 ? ' (+' + formatNumber(cases.totalLastDate) + ' за предыдущие сутки)' : ' (новых случаев не зафиксировано)'
                             }
                         </p>
 
-                        <p>
-                            { casesAggregated.byRegionSorted.length == Object.entries(props.regions).length
-                                ? 'Случаи зафиксированы во всех регионах'
-                                : 'Случаи зафиксированы в ' + casesAggregated.byRegionSorted.length + ' из ' + Object.entries(props.regions).length + ' регионов' }
-                        </p>
+                        {
+                            !props.reportFilter.subregion && (
+                                <React.Fragment>
+                                    { cases.countRegionsLastDate > 0 && <p>
+                                        Новые случаи зафиксированы в { cases.countRegionsLastDate + ' '
+                                            + declension(cases.countRegionsLastDate, [
+                                                'регионе', 'регионах', 'регионах'
+                                            ]) }
+                                    </p> }
+
+                                    <p>
+                                        { props.subregions && (
+                                            cases.countRegions >= Object.entries(props.subregions).length
+                                                ? 'За все время случаи зафиксированы во всех регионах'
+                                                : 'За все время случаи зафиксированы в ' + cases.countRegions + ' из ' + Object.entries(props.subregions).length + ' регионов' 
+                                        ) }
+                                    </p>
+                                </React.Fragment>
+                            )
+                        }
                     </React.Fragment>
                 ) : (
                     <p>Случаев не зафиксировано</p>
                 ) }
 
-            <h3>Карта</h3>
+            { <h3>Карта</h3> }
         </div>
 
-        <RussiaMap
-            map={props.map}
-            regions={props.regions}
-            data={casesAggregated.byRegion}
+        { <Map
+            geojson={props.map}
+            accessToken={props.mapAccessToken}
+            regions={props.mapFilter.subregion
+                ? { [props.mapFilter.subregion]: props.region }
+                : props.subregions
+            }
+            zoomRegion={props.mapFilter.subregion}
+            data={props.mapFilter.subregion
+                ? { [props.mapFilter.subregion]: cases.total }
+                : cases.byRegion.map
+            }
             colors={[{
                     threshold: 0,
                     color: '#e6e6e6'
                 },
-                ...getColorThresholds(
-                    [1, 10, 20, 50, 100, 500, 1000], '#ecda9a', '#ee4d5a'
+                ...getColorThresholds(props.thresholds.cases, '#ecda9a', '#ee4d5a'
                 )
             ]}
             signValue={(value) => {
                 return formatNumber(value) + ' ' + declension(value, ['случай', 'случая', 'случаев']);
             }}
-        />
+        /> }
 
         <div className="Report__Block">
             <ReportTable
                 name="casesTable"
                 valueColumn="Случаев"
-                regions={props.regions}
-                byRegionLastDate={casesAggregated.lastDate && casesAggregated.lastDate == props.data.updatedOn
-                    ? casesAggregated.byRegionLastDate
-                    : null}
-                byRegionSorted={casesAggregated.byRegionSorted}
-                byDateSorted={casesAggregated.byDateSorted}
-                sources={casesAggregated.sources}
+                regions={props.subregions}
+                byRegion={!props.reportFilter.subregion && props.subregions && cases.byRegion}
+                byDate={cases.byDate}
             />
         </div>
 
@@ -110,78 +133,254 @@ export default function(props: ReportProps) {
         <div className="Report__Block">
             <h2>Смерти</h2>
 
-            { casesAggregated.total > 0
+            { deaths.total > 0
                 ? (
                     <React.Fragment>
                         <p>
-                            Всего смертей: {formatNumber(deathsAggregated.total)} {
-                                deathsAggregated.lastDate ? (
-                                    deathsAggregated.lastDate == props.data.updatedOn ? ' (+' + formatNumber(deathsAggregated.totalLastDate) + ' за предыдущие сутки)' : ' (новых смертей не зафиксировано)'
-                                ) : ''
+                            Всего смертей: {formatNumber(deaths.total)} {
+                                deaths.totalLastDate > 0 ? ' (+' + formatNumber(deaths.totalLastDate) + ' за предыдущие сутки)' : ' (новых смертей не зафиксировано)'
                             }
                         </p>
 
-                        <p>
-                            { deathsAggregated.byRegionSorted.length == Object.entries(props.regions).length
-                                ? 'Смерти зафиксированы во всех регионах России'
-                                : 'Смерти зафиксированы в ' + deathsAggregated.byRegionSorted.length + ' из ' + Object.entries(props.regions).length + ' регионов' }
-                        </p>
+                        {
+                            !props.reportFilter.subregion && (
+                                <React.Fragment>
+                                    { deaths.countRegionsLastDate > 0 && <p>
+                                        Новые смерти зафиксированы в { deaths.countRegionsLastDate + ' '
+                                            + declension(deaths.countRegionsLastDate, [
+                                                'регионе', 'регионах', 'регионах'
+                                            ]) } 
+                                    </p> }
+
+                                    <p>
+                                        { props.subregions && (
+                                            deaths.countRegions >= Object.entries(props.subregions).length
+                                                ? 'За все время смерти зафиксированы во всех регионах'
+                                                : 'За все время смерти зафиксированы в ' + deaths.countRegions + ' из ' + Object.entries(props.subregions).length + ' регионов'
+                                        ) }
+                                    </p>
+                                </React.Fragment>
+                            )
+                        }
                     </React.Fragment>
                 ) : (
                     <p>Смертей нет</p>
                 ) }
 
-            <h3>Карта</h3>
+            { <h3>Карта</h3> }
         </div>
 
-        <RussiaMap
-            map={props.map}
-            regions={props.regions}
-            data={deathsAggregated.byRegion}
-            colors={[
-                {
+        { <Map
+            geojson={props.map}
+            accessToken={props.mapAccessToken}
+            regions={props.mapFilter.subregion
+                ? { [props.mapFilter.subregion]: props.region }
+                : props.subregions
+            }
+            zoomRegion={props.mapFilter.subregion}
+            data={props.mapFilter.subregion
+                ? { [props.mapFilter.subregion]: deaths.total }
+                : deaths.byRegion.map
+            }
+            colors={[{
                     threshold: 0,
                     color: '#e6e6e6'
                 },
-                ...getColorThresholds(
-                    [1, 10, 20, 50, 100, 500, 1000], '#ffc6c4', '#672044'
-                )
+                ...getColorThresholds(props.thresholds.deaths, '#ffc6c4', '#672044')
             ]}
             signValue={(value) => {
                 return formatNumber(value) + ' ' + declension(value, ['смерть', 'смерти', 'смертей']);
             }}
-        />
-    
+        /> }
+
         <div className="Report__Block">
             <ReportTable
                 name="deathsTable"
                 valueColumn="Смертей"
-                regions={props.regions}
-                byRegionLastDate={deathsAggregated.lastDate && deathsAggregated.lastDate == props.data.updatedOn
-                    ? deathsAggregated.byRegionLastDate
-                    : null}
-                byRegionSorted={deathsAggregated.byRegionSorted}
-                byDateSorted={deathsAggregated.byDateSorted}
-                sources={deathsAggregated.sources}
+                regions={props.subregions}
+                byRegion={!props.reportFilter.subregion && props.subregions && deaths.byRegion}
+                byDate={deaths.byDate}
             />
         </div>
     </div>;
 }
 
-interface ReportTableProps {
-    name: string
-    caption?: string
-    valueColumn?: string
-    regions: RussiaRegions,
-    byRegionSorted: ReportRegionsArray,
-    byRegionLastDate: ReportRegions,
-    byDateSorted: ReportDateArray,
-    sources: string[]
+function extractSource(sourceUrl: string): string {
+    return (new URL(sourceUrl)).origin;
 }
 
-function ReportTable(props: ReportTableProps) {
-    const [groupedBy, setGroupedBy] = useState('byRegion');
+type StringMap = {
+    [key in string]: number
+};
 
+function aggregateData(updatedOn: string, data: ReportVersion, subregion?: string): AggregatedReport {
+    const sourceMap: StringMap = {};
+    const byRegion: ReportRegions = {};
+    const byDateSorted: ReportDateArray = [];
+    const byDateMap: ReportDateMap = {};
+    let total = 0;
+    let lastDate: string = null;
+    let earlerDate: string = null;
+
+    for (let date in data) {
+        if (subregion && !data[date].regions[subregion]) {
+            continue;
+        }
+
+        if (!lastDate) {
+            lastDate = date;
+        } else if (date > lastDate) {
+            lastDate = date;
+        }
+
+        if (!earlerDate) {
+            earlerDate = date;
+        } else if (date < earlerDate) {
+            earlerDate = date;
+        }
+
+        data[date].sourceUrls.forEach((sourceUrl) => {
+            try {
+                const source = extractSource(sourceUrl);
+                if (!sourceMap[source]) {
+                    sourceMap[source] = 0;
+                }
+                sourceMap[source]++;
+            } catch (exception) {
+                // skip invalid URLs
+            }
+        });
+
+        let dateTotal = 0;
+        for (let region in data[date].regions) {
+            if (subregion && region != subregion) {
+                continue;
+            }
+
+            if (!byRegion[region]) {
+                byRegion[region] = 0;
+            }
+            const regionCasesAtDate = data[date].regions[region];
+            byRegion[region] += regionCasesAtDate;
+            total += regionCasesAtDate;
+            dateTotal += regionCasesAtDate;
+        }
+
+        byDateMap[date] = {
+            date,
+            countAcc: 0,
+            count: dateTotal,
+            sources: [...data[date].sourceUrls]
+        };
+    }
+
+    const byRegionSorted: ReportRegionsArray = [];
+    for (const region in byRegion) {
+        byRegionSorted.push({
+            region: region,
+            count: byRegion[region]
+        });
+    }
+
+    let byRegionLastDate: ReportRegions = null;
+    if (lastDate && lastDate == updatedOn) {
+        if (!subregion) {
+            byRegionLastDate = data[lastDate].regions;
+        } else {
+            byRegionLastDate = !data[lastDate].regions[subregion]
+                ? {}
+                : {
+                    [subregion]: data[lastDate].regions[subregion]
+                };
+        }
+    }
+
+    let totalLastDate = 0;
+    if (byRegionLastDate) {
+        for (let region in byRegionLastDate) {
+            totalLastDate += byRegionLastDate[region];
+        }
+    }
+
+    byRegionSorted.sort((a, b) => {
+        if (b.count == a.count) {
+            if (!byRegionLastDate) {
+                return 0;
+            } else if (!byRegionLastDate[a.region] && byRegionLastDate[b.region]) {
+                return 1;
+            } else if (byRegionLastDate[a.region] && !byRegionLastDate[b.region]) {
+                return -1;
+            } else {
+                return byRegionLastDate[b.region] - byRegionLastDate[a.region];
+            }
+        }
+        return b.count - a.count;
+    });
+
+    let date = earlerDate;
+    let prevDate = null;
+    while (date <= updatedOn) {
+        try {
+            let parsed = parseDate(date, 'yyyy-MM-dd', new Date);
+            if (byDateMap[date]) {
+                byDateSorted.push(byDateMap[date]);
+                prevDate = date;
+            } else if (prevDate) {
+                byDateSorted.push({
+                    ...byDateMap[prevDate],
+                    date: date,
+                    count: 0,
+                    sources: []
+                });
+            }
+            date = formatDate(addDays(parsed, 1), 'yyyy-MM-dd');
+        } catch {
+            break;
+        }
+    }
+
+    if (byDateSorted.length > 0) {
+        byDateSorted[0].countAcc = byDateSorted[0].count;
+        for (let i = 1; i < byDateSorted.length; i++) {
+            byDateSorted[i].countAcc += byDateSorted[i].count + byDateSorted[i - 1].countAcc;
+        }
+    }
+
+    byDateSorted.reverse();
+
+    const byRegionSources: string[] = Object.entries(sourceMap)
+        .sort((a, b) => {
+            return b[1] - a[1];
+        })
+        .map(([source]) => {
+            return source;
+        });
+
+    return {
+        total,
+        totalLastDate,
+        countRegionsLastDate: byRegionLastDate ? Object.entries(byRegionLastDate).length : 0,
+        countRegions: Object.entries(byRegion).length,
+        byRegion: {
+            map: byRegion,
+            lastDateMap: byRegionLastDate,
+            sorted: byRegionSorted,
+            sources: byRegionSources
+        },
+        byDate: {
+            sorted: byDateSorted
+        }
+    };
+}
+
+//
+
+interface DateReportTableProps {
+    valueColumn: string,
+    sorted: ReportDateArray
+}
+
+function DateReportTable(props: DateReportTableProps) {
     let tableSourceIndex = 1;
 
     function buildDateItem(reportDate: ReportDate): TableItem {
@@ -201,9 +400,7 @@ function ReportTable(props: ReportTableProps) {
                         : ''
                     } {
                         reportDate.sources.map((source, index) => {
-                            return <sup key={index}>
-                                <a href={source} target="_blank">{tableSourceIndex++}</a>
-                            </sup>;
+                            return <sup key={index}><a href={source} target="_blank">{tableSourceIndex++}</a> </sup>;
                         })
                     }
                 </React.Fragment>
@@ -211,93 +408,175 @@ function ReportTable(props: ReportTableProps) {
         };
     }
 
-    const byDateSortedItems: TableItem[] = [];
+    // hide same data
+    const sortedItems: TableItem[] = [];
     let sameQuantity = 0;
 
-    props.byDateSorted.forEach((byDateSorted, index) => {
-        if (byDateSorted.count == 0) {
+    for (let i = props.sorted.length - 1; i >= 0; i--) {
+        if (props.sorted[i].count == 0) {
             sameQuantity++
         } else {
             if (sameQuantity >= 2) {
                 if (sameQuantity > 2) {
-                    byDateSortedItems.push('---');
+                    sortedItems.push('---');
                 }
-                byDateSortedItems.push(buildDateItem(props.byDateSorted[index - 1]));
+                sortedItems.push(buildDateItem(props.sorted[i + 1]));
             }
             sameQuantity = 0;
         }
 
         if (sameQuantity < 2) {
-            byDateSortedItems.push(buildDateItem(byDateSorted));
+            sortedItems.push(buildDateItem(props.sorted[i]));
+        }   
+    }
+
+    if (sameQuantity >= 2) {
+        if (sameQuantity > 2) {
+            sortedItems.push('---');
         }
-    });
+        sortedItems.push(buildDateItem(props.sorted[0]));
+    }
+
+    sortedItems.reverse();
+
+    return <Table
+        header={[props.valueColumn]}
+        items={sortedItems}
+    />
+}
+
+interface RegionReportTableProps {
+    valueColumn: string,
+    regions: Regions,
+    sorted: ReportRegionsArray,
+    lastDateMap: ReportRegions,
+    sources: string[],
+}
+
+function RegionReportTable(props: RegionReportTableProps) {
+    return <Table
+        header={[props.valueColumn]}
+        items={props.sorted.map((byRegion) => {
+            const { region, count } = byRegion;
+            return {
+                label: props.regions && props.regions[region]
+                    ? props.regions[region].ru
+                    : region,
+                values: [
+                    {
+                        quantityDesc: formatNumber(count) + ' '
+                            + (
+                                props.lastDateMap && props.lastDateMap[region] ? ' (+' + formatNumber(props.lastDateMap[region]) + ')' : ''
+                            ),
+                        quantity: count
+                    }
+                ]
+            };
+        })}
+        footer={props.sources.length > 0 && <React.Fragment>
+            Данные: {props.sources.map((source, index) => {
+                const url = new URL(source);
+                return <React.Fragment key={index}>
+                    {index > 0 && ', '}<a
+                        href={source}
+                        target="_blank"
+                    >
+                        {punycode.toUnicode(url.host)}
+                    </a>
+                </React.Fragment>;
+            })}
+        </React.Fragment>}
+    />;
+}
+
+interface ReportTableProps {
+    name: string
+    valueColumn: string
+    regions: Regions,
+    byRegion?: {
+        sorted: ReportRegionsArray,
+        lastDateMap?: ReportRegions,
+        sources: string[]
+    }
+    byDate?: {
+        sorted: ReportDateArray,
+    }
+}
+
+function ReportTable(props: ReportTableProps) {
+    const [ dataGroups, setDataGroups ] = useState([]);
+    const [ groupedBy, setGroupedBy ] = useState(null);
+
+    useEffect(() => {
+        const dataGroups: TextRadioGroupItem[] = [];
+
+        if (props.byRegion) {
+            dataGroups.push({
+                caption: 'по регионам',
+                value: 'byRegion'
+            });
+        }
+
+        if (props.byDate) {
+            dataGroups.push({
+                caption: 'прогресс',
+                value: 'byDate'
+            });
+        }
+
+        setDataGroups(dataGroups);
+        setGroupedBy(dataGroups.length > 0 ? dataGroups[0].value : null);
+    }, [
+        props.byRegion,
+        props.byDate
+    ]);
 
     return <div className="ReportTable">
-        <h3 className="ReportTable__Header">{props.caption || 'Таблица'}</h3>
+        <h3 className="ReportTable__Header">
+            {dataGroups.length != 1 ? 'Данные' : (
+                dataGroups[0].value == 'byDate'
+                    ? 'Прогресс'
+                    : (
+                        dataGroups[0].value == 'byRegion'
+                            ? 'По регионам'
+                            : 'Данные'
+                    )
+            )}
+        </h3>
 
         <div className="ReportTable__Body">
-            <div className="ReportTable__Grouped">
-                <div className="ReportTable__GroupedItem">
-                    <TextRadio
-                        checked={groupedBy == 'byRegion'}
-                        name={props.name + '_groupedBy'}
-                        caption="по регионам"
-                        value="byRegion"
-                        onSelect={() => {
-                            setGroupedBy('byRegion');
-                        }}
-                    />
-                </div>
-                <div className="ReportTable__GroupedItem">
-                    <TextRadio
-                        checked={groupedBy == 'byDate'}
-                        name={props.name + '_groupedBy'}
-                        caption="по дате"
-                        value="byDate"
-                        onSelect={() => {
-                            setGroupedBy('byDate');
-                        }}
-                    />
-                </div>
-            </div>
+            {dataGroups.length > 1 && <div className="ReportTable__Grouped">
+                <TextRadioGroup
+                    name={props.name + '_groupedBy'}
+                    value={groupedBy}
+                    items={dataGroups}
+                    onChange={(value) => {
+                        setGroupedBy(value);
+                    }}
+                />
+            </div>}
 
             {groupedBy == 'byRegion' ? (
-                <Table
-                    header={[props.valueColumn]}
-                    items={props.byRegionSorted.map((byRegion) => {
-                        const { region, count } = byRegion;
-                        return {
-                            label: props.regions[region] ? props.regions[region].ru : region,
-                            values: [
-                                {
-                                    quantityDesc: formatNumber(count) + ' '
-                                        + (
-                                            props.byRegionLastDate && props.byRegionLastDate[region] ? ' (+' + formatNumber(props.byRegionLastDate[region]) + ')' : ''
-                                        ),
-                                    quantity: count
-                                }
-                            ]
-                        };
-                    })}
-                    footer={<React.Fragment>
-                        Данные: {props.sources.map((source, index) => {
-                            const url = new URL(source);
-                            return <React.Fragment key={index}>
-                                {index > 0 && ', '}<a
-                                    href={source}
-                                    target="_blank"
-                                >
-                                    {url.host}
-                                </a>
-                            </React.Fragment>;
-                        })}
-                    </React.Fragment>}
+                <RegionReportTable
+                    valueColumn={props.valueColumn}
+                    lastDateMap={props.byRegion.lastDateMap}
+                    sorted={props.byRegion.sorted}
+                    regions={props.regions}
+                    sources={props.byRegion.sources}
                 />
             ) : (
-                <Table
-                    header={[props.valueColumn]}
-                    items={byDateSortedItems}
-                />
+                groupedBy == 'byDate' ? (
+                    <DateReportTable
+                        valueColumn={props.valueColumn}
+                        sorted={props.byDate.sorted}
+
+                    />
+                ) : (
+                    <Table
+                        header={[props.valueColumn]}
+                        items={[]}
+                    />
+                )
             )}
         </div>
     </div>;
@@ -391,6 +670,39 @@ function Table(props: TableProps) {
 
 //
 
+interface TextRadioGroupItem {
+    value: string,
+    caption: string
+}
+
+interface TextRadioGroupProps {
+    name: string,
+    value: string,
+    items: TextRadioGroupItem[],
+    onChange?: (value: string) => void
+}
+
+function TextRadioGroup(props: TextRadioGroupProps) {
+    return <div className="TextRadioGroup">
+        {props.items.map((item, index) => {
+            return <div
+                key={index}
+                className="TextRadioGroup__Item"
+            >
+                <TextRadio
+                    checked={props.value == item.value}
+                    name={props.name}
+                    caption={item.caption}
+                    value={item.value}
+                    onSelect={() => {
+                        props.onChange && props.onChange(props.items[index].value);
+                    }}
+                />
+            </div>;
+        })}
+    </div>;
+}
+
 interface TextRadioProps {
     checked: boolean,
     caption: string,
@@ -470,166 +782,4 @@ function getColorThresholds(thresholds: number[], beginColor: string, endColor: 
                 color
             };
         });
-}
-
-function extractSource(sourceUrl: string): string {
-    const url = (new URL(sourceUrl));
-    return url.origin;
-}
-
-type StringMap = {
-    [key in string]: number
-};
-
-function aggregateData(updatedOn: string, data: ReportVersion): AggregatedReport {
-    const sourceMap: StringMap = {};
-    const byRegion: ReportRegions = {};
-    const byDateSorted: ReportDateArray = [];
-    const byDateMap: ReportDateMap = {};
-    let total = 0;
-    let lastDate: string = null;
-    let earlerDate: string = null;
-
-    for (let date in data) {
-        if (!lastDate) {
-            lastDate = date;
-        } else if (date > lastDate) {
-            lastDate = date;
-        }
-
-        if (!earlerDate) {
-            earlerDate = date;
-        } else if (date < earlerDate) {
-            earlerDate = date;
-        }
-
-        let dateTotal = 0;
-
-        data[date].sourceUrls.forEach((sourceUrl) => {
-            try {
-                const source = extractSource(sourceUrl);
-                if (!sourceMap[source]) {
-                    sourceMap[source] = 0;
-                }
-                sourceMap[source]++;
-            } catch (exception) {
-                // Пропускаем невалидные URL
-            }
-        });
-
-        for (let region in data[date].regions) {
-            if (!byRegion[region]) {
-                byRegion[region] = 0;
-            }
-            const regionCasesAtDate = data[date].regions[region];
-            byRegion[region] += regionCasesAtDate;
-            total += regionCasesAtDate;
-            dateTotal += regionCasesAtDate;
-        }
-
-        byDateMap[date] = {
-            date,
-            countAcc: 0,
-            count: dateTotal,
-            sources: [...data[date].sourceUrls]
-        };
-
-        // byDateSorted.push({
-        //     date,
-        //     countAcc: dateTotal,
-        //     count: dateTotal,
-        //     sources: [...data[date].sourceUrls]
-        // });
-    }
-
-    let totalLastDate = 0;
-    if (lastDate) {
-        for (let region in data[lastDate].regions) {
-            totalLastDate += data[lastDate].regions[region];
-        }
-    }
-
-    const byRegionSorted: ReportRegionsArray = [];
-    for (const region in byRegion) {
-        byRegionSorted.push({
-            region: region,
-            count: byRegion[region]
-        });
-    }
-
-    const byRegionLastDate: ReportRegions = lastDate ? data[lastDate].regions : null;
-
-    byRegionSorted.sort((a, b) => {
-        if (b.count == a.count) {
-            if (!byRegionLastDate) {
-                return 0;
-            } else if (!byRegionLastDate[a.region] && byRegionLastDate[b.region]) {
-                return 1;
-            } else if (byRegionLastDate[a.region] && !byRegionLastDate[b.region]) {
-                return -1;
-            } else {
-                return byRegionLastDate[b.region] - byRegionLastDate[a.region];
-            }
-        }
-        return b.count - a.count;
-    });
-
-    let date = earlerDate;
-    let prevDate = null;
-    while (date <= updatedOn) {
-        try {
-            let parsed = parseDate(date, 'yyyy-MM-dd', new Date);
-            if (byDateMap[date]) {
-                byDateSorted.push(byDateMap[date]);
-                prevDate = date;
-            } else if (prevDate) {
-                byDateSorted.push({
-                    ...byDateMap[prevDate],
-                    date: date,
-                    count: 0,
-                    sources: []
-                });
-            }
-            date = formatDate(addDays(parsed, 1), 'yyyy-MM-dd');
-        } catch {
-            break;
-        }
-    }
-
-    if (byDateSorted.length > 0) {
-        byDateSorted[0].countAcc = byDateSorted[0].count;
-        for (let i = 1; i < byDateSorted.length; i++) {
-            byDateSorted[i].countAcc += byDateSorted[i].count + byDateSorted[i - 1].countAcc;
-        }
-    }
-
-
-    // byDateSorted.sort((a, b) => {
-    //     return a.date > b.date ? -1 : 1;
-    // });
-
-    byDateSorted.reverse();
-
-    // for (let i = byDateSorted.length - 2; i >= 0; i--) {
-    //     byDateSorted[i].countAcc += byDateSorted[i + 1].countAcc;
-    // }
-
-    const sources: string[] = Object.entries(sourceMap)
-        .sort((a, b) => {
-            return b[1] - a[1];
-        })
-        .map(([source, count]) => {
-            return source;
-        })
-
-    return {
-        total,
-        byRegion,
-        byRegionSorted,
-        byDateSorted,
-        lastDate,
-        totalLastDate,
-        byRegionLastDate,
-        sources
-    };
 }

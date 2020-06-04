@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect
+} from 'react-router-dom';
 import WebFont from 'webfontloader';
 import 'leaflet/dist/leaflet.css';
 import 'normalize.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch';
 library.add(faCircleNotch);
 
-import Report from './Report';
-import { fixChukotka } from './RussiaMap';
+import Spinner from './Spinner';
+import ReportPage from './ReportPage';
 import './styles.scss';
 
 function loadFonts() {
@@ -32,17 +37,9 @@ function loadFonts() {
     });
 }
 
-function Spinner() {
-    return <div className="Spinner">
-        <FontAwesomeIcon
-            icon="circle-notch"
-            spin={true}
-        />
-    </div>;
-}
-
 interface AppProps {
-    dataBaseUrl: string
+    basePath: string,
+    mapAccessToken: string
 }
 
 function App(props: AppProps) {
@@ -50,34 +47,19 @@ function App(props: AppProps) {
         isLoading: true,
         isError: false
     });
-    const [ regions, setRegions ] = useState(null);
-    const [ map, setMap ] = useState(null);
-    const [ report, setReport ] = useState(null);
+    const [ meta, setMeta ] = useState(null);
 
     const axiosInstance = axios.create({
-        baseURL: props.dataBaseUrl
+        baseURL: props.basePath
     });
 
     useEffect(() => {
-        loadFonts()
-            .then(() => {
-                return Promise.all([
-                    axiosInstance.get('/data/maps/ru.geojson'),
-                    axiosInstance.get('/data/regions/ru.json'),
-                    axiosInstance.get('/data/reports/ru.json')
-                ]);
-            })
-            .then((responses) => {
-                return responses.map((res) => {
-                    return res.data;
-                });
-            })
-            .then((data) => {
-                fixChukotka(data[0]);
-
-                setMap(data[0]);
-                setRegions(data[1]);
-                setReport(data[2]);
+        Promise.all([
+                loadFonts(),
+                axiosInstance.get('/data/meta.json')
+            ])
+            .then(([, metaRes]: [any, AxiosResponse]) => {
+                setMeta(metaRes.data);
 
                 setState({
                     isLoading: false,
@@ -102,11 +84,35 @@ function App(props: AppProps) {
                         </div>
                     </div>
                 ) : (
-                    <Report
-                        map={map}
-                        regions={regions}
-                        data={report}
-                    />
+                    <Router
+                        basename={props.basePath}
+                    >
+                        <Switch>
+                            <Route path="/:level1/:level2?">
+                                {({match}) => {
+                                    const path = ['WORLD'];
+
+                                    if (match.params.level1) {
+                                        path.push(match.params.level1.toUpperCase());
+                                        
+                                        if (match.params.level2) {
+                                            path.push(match.params.level2.toUpperCase());
+                                        }
+                                    }
+
+                                    return <ReportPage
+                                        axios={axiosInstance}
+                                        meta={meta}
+                                        path={path}
+                                        mapAccessToken={props.mapAccessToken}
+                                    />;
+                                }}
+                            </Route>
+                            <Route path="/">
+                                <Redirect push to="/ru" />
+                            </Route>
+                        </Switch>
+                    </Router>
                 )
         }
     </React.Fragment>;
@@ -115,5 +121,6 @@ function App(props: AppProps) {
 const appElement = document.getElementById('app');
 
 ReactDOM.render(<App
-    dataBaseUrl={appElement.dataset.dataBaseUrl}
+    basePath={process.env.BASE_PATH}
+    mapAccessToken={process.env.MAP_ACCESS_TOKEN}
 />, appElement);

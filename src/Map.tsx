@@ -2,22 +2,27 @@ import React, { useRef, useEffect } from 'react';
 import { GeoJSON, FeatureCollection } from 'geojson';
 import L from 'leaflet';
 
-import { RussiaRegions, ReportRegions } from './Interfaces';
+import {
+    Regions,
+    ReportRegions
+} from './Interfaces';
 
 interface ThresholdColor {
     threshold: number,
     color: string
 }
 
-export interface RussiaMapProps {
-    map: GeoJSON,
-    regions: RussiaRegions,
+export interface MapProps {
+    geojson: GeoJSON,
+    accessToken: string,
+    regions?: Regions,
     data: ReportRegions,
     colors: ThresholdColor[],
-    signValue?: (value: number) => string
+    signValue?: (value: number) => string,
+    zoomRegion?: string
 }
 
-export default function (props: RussiaMapProps) {
+export default function (props: MapProps) {
     const refMap = useRef(null);
 
     const signValue = props.signValue || ((value) => {
@@ -29,11 +34,7 @@ export default function (props: RussiaMapProps) {
             zoomControl: true,
             scrollWheelZoom: false,
             doubleClickZoom: false,
-            maxBounds: [
-                [82.7, 12.4],
-                [35.2, 193.8]
-            ]
-        }).setView([69.5, 104.64], 3);
+        });
 
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -42,13 +43,13 @@ export default function (props: RussiaMapProps) {
             id: 'mapbox/light-v9',
             tileSize: 512,
             zoomOffset: -1,
-            accessToken: 'pk.eyJ1IjoibWF4aW16YXNvcmluIiwiYSI6ImNrODh6dDlmbjAxaHUzaHBremp1YWQ5c2wifQ.36jme_fPdcDtD6PxwXXE-g'
-        }).addTo(leafletMap)
+            accessToken: props.accessToken
+        }).addTo(leafletMap);
 
-        const russiaLayer = L.geoJSON(props.map, {
+        const mainLayer = L.geoJSON(props.geojson, {
             style: (feature) => {
-                const iso3166_2 = feature.properties['iso3166_2'];
-                const value = props.data[iso3166_2] || 0;
+                const id = feature.properties['id'];
+                const value = props.data[id] || 0;
 
                 return {
                     fillColor: getFillColor(props.colors, value),
@@ -60,22 +61,20 @@ export default function (props: RussiaMapProps) {
                 };
             },
             onEachFeature: (feature, layer) => {
-                const iso3166_2 = feature.properties['iso3166_2'];
-                const regionName = props.regions[iso3166_2]
-                    ? props.regions[iso3166_2].ru
-                    : iso3166_2;
-                const value = props.data[iso3166_2] || 0;
+                const id = feature.properties['id'];
+                const regionName = props.regions && props.regions[id]
+                    ? props.regions[id].ru
+                    : id;
+                const value = props.data[id] || 0;
 
-                layer.bindTooltip('<strong>'+regionName+'</strong>: ' + signValue(value), {
+                layer.bindTooltip('<strong>' + regionName + '</strong>: ' + signValue(value), {
                     sticky: true,
                     direction: 'right'
                 });
 
                 layer.on({
                     mouseover: (e) => {
-                        var layer = e.target;
-
-                        layer.setStyle({
+                        e.target.setStyle({
                             weight: 2,
                             color: '#666',
                             dashArray: '',
@@ -83,28 +82,52 @@ export default function (props: RussiaMapProps) {
                         });
 
                         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                            layer.bringToFront();
+                            e.target.bringToFront();
                         }
                     },
                     mouseout: (e) => {
-                        russiaLayer.resetStyle(e.target);
+                        mainLayer.resetStyle(e.target);
                     },
                     click: (e) => {
                         leafletMap.fitBounds(e.target.getBounds());
                     }
-                })
+                });
             }
         });
-        russiaLayer.addTo(leafletMap);
+
+        // adjust bounds
+        if (props.zoomRegion) {
+            mainLayer.eachLayer((layer) => {
+                if (layer.feature.properties['id'] == props.zoomRegion) {
+                    layer.addTo(leafletMap);
+                    leafletMap.fitBounds(layer.getBounds());
+                    leafletMap.setMaxBounds(layer.getBounds());
+                }
+            });
+        } else {
+            mainLayer.addTo(leafletMap);
+
+            leafletMap.fitBounds(mainLayer.getBounds());
+            leafletMap.setMaxBounds(mainLayer.getBounds());
+        }
     }, []);
 
     return <div className="Map">
+        <div className="Map__Overlay" />
         <div
-            className="Map__Container"
             ref={refMap}
-            // style={{width: 1000, height: 650 }}
+            className="Map__Container"
         />
     </div>;
+}
+
+export function fix180(map: FeatureCollection, filterFeatures?: string[]) {
+    for (let feature of map.features) {
+        if (!filterFeatures || filterFeatures.includes(feature.properties['id'])) {
+            antimeridian(feature.geometry.coordinates);
+            joinPolygons(feature);
+        }
+    }
 }
 
 function getFillColor(colors: ThresholdColor[], value: number) {
@@ -128,16 +151,6 @@ function antimeridian(elem) {
                     elem[i][0] = 180 + (180 + elem[i][0]);
                 }
             }
-        }
-    }
-}
-
-export function fixChukotka(map: FeatureCollection) {
-    for (let feature of map.features) {
-        if (feature.properties['iso3166_2'] == 'RU-CHU') {
-            antimeridian(feature.geometry.coordinates);
-            joinPolygons(feature);
-            break;
         }
     }
 }

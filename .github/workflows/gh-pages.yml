@@ -21,8 +21,8 @@ jobs:
       run: yarn install
 
     - name: Make build
-      run: yarn build --env.baseUrl=https://maximzasorin.github.io/covid-19/
-    
+      run: BASE_PATH=/covid-19/ MAP_ACCESS_TOKEN=${{ secrets.MAP_ACCESS_TOKEN }} yarn build
+
     - name: Deploy to Github Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
