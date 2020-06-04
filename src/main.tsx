@@ -45,7 +45,8 @@ interface AppProps {
 function App(props: AppProps) {
     const [ state, setState ] = useState({
         isLoading: true,
-        isError: false
+        isError: false,
+        redirect: null
     });
     const [ meta, setMeta ] = useState(null);
 
@@ -54,6 +55,12 @@ function App(props: AppProps) {
     });
 
     useEffect(() => {
+        let redirect = null;
+        if (localStorage.getItem('notFoundLocation')) {
+            redirect = localStorage.getItem('notFoundLocation');
+            localStorage.removeItem('notFoundLocation');
+        }
+
         Promise.all([
                 loadFonts(),
                 axiosInstance.get('/data/meta.json')
@@ -63,13 +70,15 @@ function App(props: AppProps) {
 
                 setState({
                     isLoading: false,
-                    isError: false
+                    isError: false,
+                    redirect
                 });
             })
             .catch((err) => {
                 setState({
                     isLoading: false,
-                    isError: true
+                    isError: true,
+                    redirect: null
                 });
             });
     }, []);
@@ -109,7 +118,7 @@ function App(props: AppProps) {
                                 }}
                             </Route>
                             <Route path="/">
-                                <Redirect push to="/ru" />
+                                <Redirect push to={state.redirect || '/ru'} />
                             </Route>
                         </Switch>
                     </Router>
