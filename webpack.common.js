@@ -60,9 +60,11 @@ module.exports = {
         ]
     },
     plugins: [
-        new CopyPlugin([
-            { from: 'data', to: 'data' },
-        ]),
+        new CopyPlugin({
+            patterns: [
+                { from: 'data', to: 'data' },
+            ]
+        }),
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: './index.html'
