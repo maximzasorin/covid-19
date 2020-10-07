@@ -139,8 +139,8 @@ a:active {
 .Table {
     &__ActionsRow { text-align: center; }
 
-    &__Label { width: 75%; }
-    &__Value { width: 25%; }
+    &__Label { width: 73%; }
+    &__Value { width: 27%; }
 
     font-size: 14px;
 
@@ -227,7 +227,23 @@ a:active {
 
 @media (max-width: 500px) {
     .Table {
-        &__Label { width: 60%; }
-        &__Value { width: 40%; }
+        &__Label { width: 63%; }
+        &__Value { width: 37%; }
+    }
+}
+
+@media (max-width: 800px) {
+    .RegionsList__Body { columns: 4; }
+}
+@media (max-width: 650px) {
+    .RegionsList__Body { columns: 3; }
+}
+@media (max-width: 450px) {
+    .RegionsList__Body { columns: 2; }
+}
+@media (max-width: 350px) {
+    .RegionsList {
+        &__Item { display: block; }
+        &__Body { columns: 1; }
     }
 }
