@@ -14,7 +14,11 @@ module.exports = {
         publicPath: BASE_PATH
     },
     resolve: {
-        extensions: ['.ts', '.tsx', '.js'],
+        extensions: [
+            '.ts',
+            '.tsx',
+            '.js'
+        ],
         mainFields: ['main'],
     },
     module: {
@@ -22,47 +26,46 @@ module.exports = {
             {
                 test: /.tsx?$/,
                 exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                '@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'
-                            ]
-                        }
-                    }
-                ]
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        '@babel/preset-env',
+                        '@babel/preset-react',
+                        '@babel/preset-typescript'
+                    ]
+                }
             },
             {
                 test: /\.scss$/,
-                loaders: [
-                    'style-loader', 'css-loader', 'sass-loader'
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'sass-loader'
                 ]
             },
             {
                 test: /\.css$/,
-                loaders: [
-                    'style-loader', 'css-loader'
+                use: [
+                    'style-loader',
+                    'css-loader'
                 ]
             },
             {
                 test: /\.png$/,
-                loaders: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'images/'
-                        }
-                    }
-                ]
+                type: 'asset/resource',
+                generator: {
+                    filename: 'images/[name][ext]'
+                }
             }
         ]
     },
     plugins: [
         new CopyPlugin({
             patterns: [
-                { from: 'data', to: 'data' },
+                {
+                    from: 'data',
+                    to: 'data'
+                },
             ]
         }),
         new HtmlWebpackPlugin({
