@@ -64,7 +64,13 @@ module.exports = {
             patterns: [
                 {
                     from: 'data',
-                    to: 'data'
+                    to: 'data',
+                    filter: (resourcePath) => {
+                        return resourcePath.match(/\.(geo)?json$/);
+                    },
+                    transform: (content) => {
+                        return JSON.stringify(JSON.parse(content.toString()));
+                    }
                 },
             ]
         }),
