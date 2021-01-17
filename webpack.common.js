@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 require('dotenv').config();
 
 const BASE_PATH = process.env.BASE_PATH || '/';
@@ -60,6 +61,23 @@ module.exports = {
         ]
     },
     plugins: [
+        new MergeJsonWebpackPlugin({
+            output: {
+                groupBy: [
+                    {
+                        pattern:'./data/reports/ru-bel.json.*',
+                        fileName: './data/reports/ru-bel.json'
+                    },
+                    {
+                        pattern:'./data/reports/ru.json.*',
+                        fileName: './data/reports/ru.json'
+                    }
+                ]
+            }
+            // globOptions: {
+            //     nosort: true
+            // }
+        }),
         new CopyPlugin({
             patterns: [
                 {
