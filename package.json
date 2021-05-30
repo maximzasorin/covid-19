@@ -30,7 +30,7 @@
     "babel-loader": "^8.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
-    "css-loader": "^3.4.2",
+    "css-loader": "^5.2.4",
     "dotenv": "^8.2.0",
     "html-webpack-plugin": "^5.0.0-beta.5",
     "node-sass": "^4.13.1",
@@ -45,5 +45,6 @@
   "scripts": {
     "start": "./node_modules/.bin/webpack serve --config webpack.dev.js",
     "build": "./node_modules/.bin/webpack --config webpack.prod.js"
-  }
+  },
+  "version": "0.0.0"
 }
